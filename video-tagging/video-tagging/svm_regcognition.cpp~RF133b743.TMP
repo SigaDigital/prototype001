@@ -1,0 +1,10 @@
+#include "stdafx.h"
+#include "svm_regcognition.h"
+
+using namespace dlib;
+using namespace std;
+
+SvmRegcognition::SvmRegcogition()
+{
+	cout << "test" << endl;
+}

@@ -2,6 +2,18 @@
     CONSOLE APPLICATION : video-tagging Project Overview
 ========================================================================
 
+1. Have to copy all file from resource and replace in the same directory of executable file
+2. Pre-trained files is in "trainer"
+
+Usage :
+For sighthound method
+	video-tagging.exe [video file path] sighthound
+	Example --> video-tagging.exe C:\mar.mp4 sighthound
+For svm method
+	video-tagging.exe [video file path] svm [pre-trined directory path]
+	Example --> video-tagging.exe C:\mar.mp4 svm C:\trainer 
+
+/////////////////////////////////////////////////////////////////////////////
 AppWizard has created this video-tagging application for you.
 
 This file contains a summary of what you will find in each of the files that
