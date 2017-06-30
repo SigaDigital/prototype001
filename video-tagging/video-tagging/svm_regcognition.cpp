@@ -38,7 +38,7 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 		double max = 0;
 		const double invSize = 1.0 / (name.size() - 1) ;
 
-		for (int i = 0; i < all_test.size(); i++)
+		for (int i = 0; i < all_test.size() - 1; i++)
 		{
 			pfunct_type learned_pfunct = all_pairs[i];
 
