@@ -18,16 +18,4 @@
 #include <curl.h>
 #include <json.hpp>
 
-#include <dlib/clustering.h>
-#include <dlib/string.h>
-#include <dlib/dnn.h>
-#include <dlib/image_io.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdlib.h>
-#include <direct.h>
-#include <windows.h>
-#include <string>
-#include <vector>
-#include <stack>
 // TODO: reference additional headers your program requires here

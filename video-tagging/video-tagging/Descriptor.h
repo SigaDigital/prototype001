@@ -1,4 +1,5 @@
 #pragma once
+#include <dlib/dnn.h>
 
 using namespace dlib;
 using namespace std;
