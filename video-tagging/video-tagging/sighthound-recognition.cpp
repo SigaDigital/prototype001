@@ -34,14 +34,9 @@ std::string SighthoundRecognition::Recognize(cv::Mat& mat)
 	std::string label = result["objects"][0]["objectId"];
 	double confidence = result["objects"][0]["faceAnnotation"]["recognitionConfidence"];
 
-	if (confidence > 0.9)
-	{
-		m_label = label;
-	}
-	else
-	{
-		m_label = "";
-	}
+	std::ostringstream strs;
+	strs << "Label: " << label << " Score: " << confidence;
+	m_label = strs.str();
 
 	return m_label;
 }
