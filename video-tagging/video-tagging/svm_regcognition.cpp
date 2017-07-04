@@ -1,17 +1,23 @@
 #include "stdafx.h"
 #include "svm_regcognition.h"
-#include "Descriptor.h"
+#include "TrainFace.h"
 #include "Manage.h"
-
+#include <algorithm> 
 
 using namespace dlib;
 using namespace std;
 
-SvmRegcognition::SvmRegcognition(char* path)
+SvmRegcognition::SvmRegcognition()
 {
-	all_test = Manage::get_all_file(path);
-	string path_file(strcat(path, "\\name.dat"));
-	deserialize(path_file) >> name;	
+	string path = Manage::get_current();
+	path = Manage::change_out(path, 2);
+	string train_path = path + "/trainer/data/";
+	all_test = Manage::get_all_file(train_path.c_str());
+	path += "/trainer/name.dat";
+	{
+		deserialize(path) >> name;
+	}
+
 
 	for (int i = 0; i < all_test.size(); i++)
 	{
@@ -24,16 +30,21 @@ SvmRegcognition::SvmRegcognition(char* path)
 	}
 }
 
+
 string SvmRegcognition::Recognize(cv::Mat& mat)
 {
 	string output = "";
-	Descriptor ex;
-	std::vector<matrix<float, 0, 1>> tmp = ex.get_description(mat);
-	for (int i = 0; i < tmp.size(); i++)
+	std::vector<matrix<rgb_pixel>> faces = face.get_face(mat);
+	matrix<float, 0, 1> test;
+	
+	for (int i = 0; i < faces.size(); i++)
 	{
-		matrix<float, 0, 1> test = tmp[i];
-		double *count = new double[name.size()];
-		memset(count, 0, sizeof(double) * name.size());
+		image_window win(faces[i]);
+		test = ex.get_description(faces[i]);
+		double *prob = new double[name.size()];
+		int *count = new int[name.size()];
+		memset(prob, 0, sizeof(double) * name.size());
+		memset(count, 0, sizeof(int) * name.size());
 		int index = 0;
 		double max = 0;
 		const double invSize = 1.0 / (name.size() - 1) ;
@@ -46,28 +57,81 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 			string nameA = data_name.substr(0, data_name.find_first_of("&"));
 			string nameB = data_name.substr(data_name.find_last_of("&") + 1);
 
-			double prob = learned_pfunct(test);
+			double dis = learned_pfunct(test);
 
 			int indexA = atoi(nameA.c_str());
 			int indexB = atoi(nameB.c_str());
-			count[indexA] += (prob - 0.5) * 2 * invSize;
-			count[indexB] += (1 - prob - 0.5) * 2 * invSize;
+			if (dis > 0.5)
+				prob[indexA] += (dis - 0.5) * 2 * invSize;
+			else
+				prob[indexB] += (1 - dis - 0.5) * 2 * invSize;
+				
+			if(dis > 0.8)
+				count[indexA]++;
+			else if(dis < 0.2)
+				count[indexB]++;
 
-			if (max < count[indexA])
+			if (max < prob[indexA])
 			{
 				index = indexA;
-				max = count[indexA];
+				max = prob[indexA];
 			}
-			if (max < count[indexB])
+			if (max < prob[indexB])
 			{
 				index = indexB;
-				max = count[indexB];
+				max = prob[indexB];
 			}
+		}		
+		if (prob[index] < 0.7)
+		{
+			unknown_faces.push_back(faces[i]);		
+			unknown_des.push_back(test);
+			
 		}
 		
-		output.append(name[index] + "---> confidence: " + cast_to_string(count[index]));
-		delete[] count;
+		output.append(name[index] + "---> confidence: " + cast_to_string(prob[index]) +
+						" Score:" + cast_to_string(count[index]) + "/" + cast_to_string(name.size()-1));
+		delete[] prob;
 	}
 
 	return output;
+}
+
+void SvmRegcognition::defineFace()
+{
+	std::vector<matrix<float, 0, 1>> des_tmp;
+	std::vector<sample_pair> edges;
+	for (size_t i = 0; i < unknown_des.size(); ++i)
+	{
+		for (size_t j = i + 1; j < unknown_des.size(); ++j)
+		{
+			if (length(unknown_des[i] - unknown_des[j]) < 0.5)
+				edges.push_back(sample_pair(i, j));
+		}
+	}
+	std::vector<unsigned long> labels;
+	
+	const auto num_clusters = chinese_whispers(edges, labels, 200);
+	image_window win_cluster;
+	for (size_t cluster_id = 0; cluster_id < num_clusters; ++cluster_id)
+	{
+		TrainFace unknown;
+		std::vector<matrix<rgb_pixel>> temp;
+		for (size_t j = 0; j < labels.size(); ++j)
+		{
+			if (cluster_id == labels[j])
+				temp.push_back(unknown_faces[j]);		
+			unknown.addFace(unknown_des[j]);
+		}
+		win_cluster.set_title("face cluster " + cast_to_string(cluster_id));
+		win_cluster.set_image(tile_images(temp));
+		string tmpName;
+		std::cout << "Please tell the name: ";
+		std::getline(std::cin, tmpName);
+		if (!tmpName.empty())
+		{			
+			unknown.setName(tmpName);
+			unknown.train();
+		}		
+	}
 }

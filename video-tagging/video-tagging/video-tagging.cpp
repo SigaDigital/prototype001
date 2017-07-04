@@ -23,22 +23,30 @@ int main(int argc, char** argv)
 	cv::Mat frame;
 
 	FaceRecognition* pRecognizer = 0;
-	if (strcmp(argv[2], "sighthound") == 0) {
+	if (strcmp(argv[2], "sighthound") == 0)
+	{
 		pRecognizer = new SighthoundRecognition("7796KskdhG1nMlLjaTWh155dYsbeZGqJzsHq");
 	}
-	else {
-		pRecognizer = new SvmRegcognition(argv[3]);
+	else
+	{
+		pRecognizer = new SvmRegcognition();
 	}
 
 	while (sampler.Next(frame)) 
 	{
+		
 		if (filter.Exec(frame))
 		{	
+			cv::imshow("frame", frame);
+			cv::waitKey(1000);
 			std::cout << pRecognizer->Recognize(frame) << std::endl;
 		}
 	}
 
+	pRecognizer->defineFace();
+	
 	delete pRecognizer;
+	cout << "end" << endl;
     return 0;
 }
 

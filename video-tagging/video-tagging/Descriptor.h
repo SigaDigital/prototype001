@@ -36,9 +36,7 @@ class Descriptor
 {
 public:
 	Descriptor();
-	virtual std::vector<matrix<float, 0, 1>> Descriptor::get_description(cv::Mat& frame);
+	virtual matrix<float, 0, 1> Descriptor::get_description(matrix<rgb_pixel> face);
 private:
-	shape_predictor sp;
 	anet_type net;
-	frontal_face_detector detector;
 };

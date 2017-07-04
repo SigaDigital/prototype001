@@ -48,15 +48,18 @@
     <ClInclude Include="Manage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FaceCrop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TrainFace.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="video-tagging.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\3rdparties\dlib\include\dlib\all\source.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Sampler.cpp">
@@ -81,6 +84,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Manage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\all\source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FaceCrop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TrainFace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

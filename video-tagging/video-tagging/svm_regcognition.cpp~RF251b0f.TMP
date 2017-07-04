@@ -1,0 +1,121 @@
+#include "stdafx.h"
+#include "svm_regcognition.h"
+#include "Descriptor.h"
+#include "Manage.h"
+#include <algorithm> 
+
+using namespace dlib;
+using namespace std;
+
+SvmRegcognition::SvmRegcognition(char* path)
+{
+	all_test = Manage::get_all_file(path);
+	string path_file(strcat(path, "\\name.dat"));
+	deserialize(path_file) >> name;	
+
+	for (int i = 0; i < all_test.size(); i++)
+	{
+		pfunct_type learned_pfunct;
+		if (Manage::get_name(all_test[i]).compare("name"))
+		{
+			deserialize(all_test[i]) >> learned_pfunct;
+			all_pairs.push_back(learned_pfunct);
+		}
+	}
+}
+
+string SvmRegcognition::Recognize(cv::Mat& mat)
+{
+	string output = "";
+	std::vector<matrix<rgb_pixel>> faces = face.get_face(mat);
+	Descriptor ex;	
+	matrix<float, 0, 1> test;
+	
+	for (int i = 0; i < faces.size(); i++)
+	{
+		image_window win(faces[i]);
+		test = ex.get_description(faces[i]);
+		double *count = new double[name.size()];
+		memset(count, 0, sizeof(double) * name.size());
+		int index = 0;
+		double max = 0;
+		const double invSize = 1.0 / (name.size() - 1) ;
+
+		for (int i = 0; i < all_test.size() - 1; i++)
+		{
+			pfunct_type learned_pfunct = all_pairs[i];
+
+			string data_name = Manage::get_name(all_test[i]);
+			string nameA = data_name.substr(0, data_name.find_first_of("&"));
+			string nameB = data_name.substr(data_name.find_last_of("&") + 1);
+
+			double prob = learned_pfunct(test);
+
+			int indexA = atoi(nameA.c_str());
+			int indexB = atoi(nameB.c_str());
+			if(prob > 0.5)
+				count[indexA] += (prob - 0.5) * 2 * invSize;
+			else
+				count[indexB] += (1 - prob - 0.5) * 2 * invSize;
+
+			if (max < count[indexA])
+			{
+				index = indexA;
+				max = count[indexA];
+			}
+			if (max < count[indexB])
+			{
+				index = indexB;
+				max = count[indexB];
+			}
+		}		
+		if (count[index] < 0.7)
+		{
+			unknown_faces.push_back(faces[i]);		
+			unknown_des.push_back(test);
+			
+		}
+		
+		output.append(name[index] + "---> confidence: " + cast_to_string(count[index]));
+		delete[] count;
+	}
+
+	return output;
+}
+
+void SvmRegcognition::defineFace()
+{
+	std::vector<matrix<float, 0, 1>> des_tmp;
+	std::vector<sample_pair> edges;
+	for (size_t i = 0; i < unknown_des.size(); ++i)
+	{
+		for (size_t j = i + 1; j < unknown_des.size(); ++j)
+		{
+			if (length(unknown_des[i] - unknown_des[j]) < 0.5)
+				edges.push_back(sample_pair(i, j));
+		}
+	}
+	std::vector<unsigned long> labels;
+	
+	const auto num_clusters = chinese_whispers(edges, labels, 200);
+	image_window win_cluster;
+	for (size_t cluster_id = 0; cluster_id < num_clusters; ++cluster_id)
+	{
+		std::vector<matrix<rgb_pixel>> temp;
+		for (size_t j = 0; j < labels.size(); ++j)
+		{
+			if (cluster_id == labels[j])
+				temp.push_back(unknown_faces[j]);			
+		}
+		win_cluster.set_title("face cluster " + cast_to_string(cluster_id));
+		win_cluster.set_image(tile_images(temp));
+		std::string tmpName;
+		std::cout << "Please tell the namee: ";
+		std::getline(std::cin, tmpName);
+		bool found = false;
+		for (int i = 0; i < name.size(); i++)
+			if (!tmpName.compare(name[i]))
+				found = true;
+		
+	}
+}

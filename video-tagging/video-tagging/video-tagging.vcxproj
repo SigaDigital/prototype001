@@ -137,14 +137,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\work\video-tagging\3rdparties\json;C:\work\video-tagging\3rdparties\dlib\include;C:\work\video-tagging\3rdparties\libcurl\include\curl;C:\Users\u8005792\Desktop\opencv3.4\opencv\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)3rdparties\json;$(SolutionDir)3rdparties\dlib\include;$(SolutionDir)3rdparties\libcurl\include\curl;$(SolutionDir)3rdparties\opencv3.4\opencv\build\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\work\video-tagging\3rdparties\dlib\lib;C:\work\video-tagging\3rdparties\libcurl\lib\dll-release-x64;C:\Users\u8005792\Desktop\opencv3.4\opencv\build\x64\vc14\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)3rdparties\dlib\lib;$(SolutionDir)3rdparties\libcurl\lib\dll-release-x64;$(SolutionDir)3rdparties\opencv3.4\opencv\build\x64\vc14\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>dlib.lib;opencv_world320.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
@@ -155,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="Descriptor.h" />
     <ClInclude Include="face-recognition.h" />
+    <ClInclude Include="FaceCrop.h" />
     <ClInclude Include="filter.h" />
     <ClInclude Include="frontal-face-filter.h" />
     <ClInclude Include="Manage.h" />
@@ -163,14 +164,16 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="svm_regcognition.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TrainFace.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\3rdparties\dlib\include\dlib\all\source.cpp">
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\all\source.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Descriptor.cpp" />
     <ClCompile Include="face-recognition.cpp" />
+    <ClCompile Include="FaceCrop.cpp" />
     <ClCompile Include="filter.cpp" />
     <ClCompile Include="frontal-face-filter.cpp" />
     <ClCompile Include="Manage.cpp" />
@@ -181,6 +184,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="svm_regcognition.cpp" />
+    <ClCompile Include="TrainFace.cpp" />
     <ClCompile Include="video-tagging.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

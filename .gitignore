@@ -7,3 +7,7 @@ video-tagging/ipch/
 video-tagging/.vs/
 video-tagging/video-tagging.VC.db
 video-tagging/video-tagging.VC.VC.opendb
+/video-tagging/description
+/video-tagging/resource
+/video-tagging/trainer
+/video-tagging/trainer/data

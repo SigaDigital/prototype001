@@ -79,3 +79,14 @@ string Manage::get_name(string path)
 	tmp = tmp.substr(0, tmp.find_last_of("."));
 	return tmp;
 }
+
+string Manage::change_out(string path, int n)
+{	
+	if (path[path.size() - 1] == '\\' || path[path.size() - 1] == '/')
+		path = path.substr(0, path.find_last_of("\\/"));
+	for (int i = 0; i < n; i++)
+	{		
+		path = path.substr(0, path.find_last_of("\\/"));
+	}
+	return path;
+}

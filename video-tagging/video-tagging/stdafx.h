@@ -17,5 +17,5 @@
 #include <dlib/opencv.h>
 #include <curl.h>
 #include <json.hpp>
-
+#include <dlib/gui_widgets.h>
 // TODO: reference additional headers your program requires here
