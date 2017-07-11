@@ -3,6 +3,8 @@
 #include "TrainFace.h"
 #include "Manage.h"
 #include <algorithm> 
+#include <direct.h>
+#include <fstream>
 
 using namespace dlib;
 using namespace std;
@@ -10,6 +12,8 @@ using namespace std;
 SvmRegcognition::SvmRegcognition()
 {
 	string path = Manage::get_current();
+	mkdir((path + "/tmp_crop_face").c_str());
+	outfile.open(path + "/tmp_crop_face/info.txt", std::ios_base::app);
 	path = Manage::change_out(path, 2);
 	string train_path = path + "/trainer/data/";
 	all_test = Manage::get_all_file(train_path.c_str());
@@ -33,13 +37,13 @@ SvmRegcognition::SvmRegcognition()
 
 string SvmRegcognition::Recognize(cv::Mat& mat)
 {
+	cout << "star recognize ..." << endl;
 	string output = "";
 	std::vector<matrix<rgb_pixel>> faces = face.get_face(mat);
 	matrix<float, 0, 1> test;
 	
 	for (int i = 0; i < faces.size(); i++)
 	{
-		image_window win(faces[i]);
 		test = ex.get_description(faces[i]);
 		double *prob = new double[name.size()];
 		int *count = new int[name.size()];
@@ -48,7 +52,7 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 		int index = 0;
 		double max = 0;
 		const double invSize = 1.0 / (name.size() - 1) ;
-
+		
 		for (int i = 0; i < all_test.size() - 1; i++)
 		{
 			pfunct_type learned_pfunct = all_pairs[i];
@@ -58,7 +62,7 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 			string nameB = data_name.substr(data_name.find_last_of("&") + 1);
 
 			double dis = learned_pfunct(test);
-
+			
 			int indexA = atoi(nameA.c_str());
 			int indexB = atoi(nameB.c_str());
 			if (dis > 0.5)
@@ -81,13 +85,17 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 				index = indexB;
 				max = prob[indexB];
 			}
-		}		
-		if (prob[index] < 0.7)
+		}			
+		if (prob[index] < 0.75)
 		{
 			unknown_faces.push_back(faces[i]);		
 			unknown_des.push_back(test);
 			
 		}
+		if(prob[index] < 0.75)
+			outfile << "unknown"  << " " << name[index] <<endl;
+		else
+			outfile << "known" << " " << name[index] << endl;
 		
 		output.append(name[index] + "---> confidence: " + cast_to_string(prob[index]) +
 						" Score:" + cast_to_string(count[index]) + "/" + cast_to_string(name.size()-1));
@@ -97,7 +105,7 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 	return output;
 }
 
-void SvmRegcognition::defineFace()
+void SvmRegcognition::clustering()
 {
 	std::vector<matrix<float, 0, 1>> des_tmp;
 	std::vector<sample_pair> edges;
@@ -112,26 +120,26 @@ void SvmRegcognition::defineFace()
 	std::vector<unsigned long> labels;
 	
 	const auto num_clusters = chinese_whispers(edges, labels, 200);
-	image_window win_cluster;
+	
 	for (size_t cluster_id = 0; cluster_id < num_clusters; ++cluster_id)
 	{
 		TrainFace unknown;
+		image_window win_cluster;
 		std::vector<matrix<rgb_pixel>> temp;
 		for (size_t j = 0; j < labels.size(); ++j)
 		{
 			if (cluster_id == labels[j])
 				temp.push_back(unknown_faces[j]);		
-			unknown.addFace(unknown_des[j]);
+			//unknown.addFace(unknown_des[j]);
 		}
 		win_cluster.set_title("face cluster " + cast_to_string(cluster_id));
 		win_cluster.set_image(tile_images(temp));
-		string tmpName;
-		std::cout << "Please tell the name: ";
-		std::getline(std::cin, tmpName);
-		if (!tmpName.empty())
+		//std::getline(std::cin, tmpName);
+		//if (!tmpName.empty())
 		{			
-			unknown.setName(tmpName);
-			unknown.train();
-		}		
+			//unknown.setName(tmpName);
+			//unknown.train();
+		}
+		cin.get();
 	}
 }

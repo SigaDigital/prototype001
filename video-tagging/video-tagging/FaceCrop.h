@@ -10,4 +10,5 @@ public:
 private:
 	shape_predictor sp;
 	frontal_face_detector detector;
+	int total;
 };

@@ -7,9 +7,12 @@
 #include "sighthound-recognition.h"
 #include "svm_regcognition.h"
 
+using namespace std;
+using namespace dlib;
+
 int main(int argc, char** argv)
 {
-	if (!(argc == 3 || argc == 4))
+	if (argc < 3)
 	{
 		cout << "For sighthound method" << endl;
 		cout << "Usage : " << argv[0] << " [video file path] sighthound" << endl;
@@ -22,6 +25,8 @@ int main(int argc, char** argv)
 	FrontalFaceFilter filter;	
 	cv::Mat frame;
 
+	sampler.setRate(atoi(argv[3]));
+
 	FaceRecognition* pRecognizer = 0;
 	if (strcmp(argv[2], "sighthound") == 0)
 	{
@@ -31,19 +36,20 @@ int main(int argc, char** argv)
 	{
 		pRecognizer = new SvmRegcognition();
 	}
-
+	
 	while (sampler.Next(frame)) 
 	{
-		
+		cout << "Next Frame" << endl;
 		if (filter.Exec(frame))
 		{	
-			cv::imshow("frame", frame);
-			cv::waitKey(1000);
+			//cv::imshow("frame", frame);
+			//cv::waitKey(1000);
+			cout << "frame execute ..." << endl;
 			std::cout << pRecognizer->Recognize(frame) << std::endl;
 		}
 	}
 
-	pRecognizer->defineFace();
+	//pRecognizer->clustering();
 	
 	delete pRecognizer;
 	cout << "end" << endl;

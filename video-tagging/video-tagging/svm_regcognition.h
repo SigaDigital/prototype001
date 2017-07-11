@@ -17,7 +17,7 @@ class SvmRegcognition: public FaceRecognition
 public:
 	SvmRegcognition();
 	virtual string Recognize(cv::Mat& mat);
-	virtual void defineFace();
+	virtual void clustering();
 private:
 	FaceCrop face;
 	Descriptor ex;
@@ -27,5 +27,6 @@ private:
 	std::vector<matrix<rgb_pixel>> faces;
 	std::vector<matrix<rgb_pixel>> unknown_faces;
 	std::vector<matrix<float, 0, 1>> unknown_des;
+	ofstream outfile;
 };
 

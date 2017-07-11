@@ -9,6 +9,12 @@ Sampler::Sampler(char* path) : m_lMs(0)
 bool Sampler::Next(cv::Mat& frame)
 {
 	m_cap.set(cv::CAP_PROP_POS_MSEC, m_lMs);
-	m_lMs += 500;
+	m_lMs += rate;
 	return m_cap.read(frame);
 }
+
+void Sampler::setRate(long time)
+{
+	rate = time;
+}
+

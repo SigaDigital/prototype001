@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\jpeg">
+      <UniqueIdentifier>{ef8cd833-f472-48a0-a410-cf882a31288d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\zlib">
+      <UniqueIdentifier>{d7a95c96-1417-4140-a31d-e9eb4b8b6094}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -53,6 +59,72 @@
     </ClInclude>
     <ClInclude Include="TrainFace.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jchuff.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jconfig.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdct.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdhuff.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jerror.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jinclude.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jmemsys.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jmorecfg.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jpegint.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jpeglib.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jversion.h">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\crc32.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\deflate.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\gzguts.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\inffast.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\inffixed.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\inflate.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\inftrees.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\trees.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zconf.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zlib.h">
+      <Filter>Resource Files\zlib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zutil.h">
+      <Filter>Resource Files\zlib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -95,5 +167,190 @@
     <ClCompile Include="TrainFace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcapimin.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcapistd.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jccoefct.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jccolor.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcdctmgr.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jchuff.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcinit.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcmainct.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcmarker.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcmaster.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcomapi.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcparam.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcphuff.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcprepct.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jcsample.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdapimin.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdapistd.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdatadst.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdatasrc.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdcoefct.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdcolor.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jddctmgr.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdhuff.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdinput.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdmainct.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdmarker.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdmaster.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdmerge.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdphuff.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdpostct.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jdsample.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jerror.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jfdctflt.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jfdctfst.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jfdctint.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jidctflt.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jidctfst.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jidctint.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jidctred.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jmemmgr.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jmemnobs.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jquant1.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jquant2.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\libjpeg\jutils.cpp">
+      <Filter>Resource Files\jpeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\adler32.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\compress.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\crc32.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\deflate.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\gzclose.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\gzlib.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\gzread.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\gzwrite.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\infback.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\inffast.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\inflate.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\inftrees.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\trees.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\uncompr.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\zutil.c">
+      <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\3rdparties\dlib\include\dlib\external\libjpeg\README">
+      <Filter>Resource Files\jpeg</Filter>
+    </None>
+    <None Include="..\3rdparties\dlib\include\dlib\external\zlib\README">
+      <Filter>Resource Files\zlib</Filter>
+    </None>
   </ItemGroup>
 </Project>
