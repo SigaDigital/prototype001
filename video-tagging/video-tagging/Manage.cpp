@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Manage.h"
+#include <fstream>
+
 using namespace dlib;
 using namespace std;
 
@@ -52,7 +54,7 @@ string Manage::get_current()
 	GetModuleFileName(NULL, buffer, MAX_PATH);
 	wstring ws(buffer);
 	string path(ws.begin(), ws.end());
-	return path.substr(0, path.find_last_of("\\/") + 1);
+	return path.substr(0, path.find_last_of("\\/"));
 }
 
 std::vector<string> Manage::get_all_file(const char* path)
@@ -80,6 +82,12 @@ string Manage::get_name(string path)
 	return tmp;
 }
 
+string Manage::get_dirName(string path)
+{
+	string tmp = path.substr(path.find_last_of("\\/") + 1);
+	return tmp;
+}
+
 string Manage::change_out(string path, int n)
 {	
 	if (path[path.size() - 1] == '\\' || path[path.size() - 1] == '/')
@@ -89,4 +97,36 @@ string Manage::change_out(string path, int n)
 		path = path.substr(0, path.find_last_of("\\/"));
 	}
 	return path;
+}
+
+bool Manage::isFileExist(const char *fileName)
+{
+	ifstream infile(fileName);
+	return infile.good();
+}
+
+void Manage::copyFile(string SRC, string DEST)
+{
+	ifstream src(SRC.c_str(), std::ios::binary);
+	ofstream dest(DEST.c_str(), std::ios::binary);
+	dest << src.rdbuf();
+}
+
+int Manage::number_of_files(string path)
+{
+	bool x = true;
+	int i = 0;
+	std::wstring widestr = std::wstring(path.begin(), path.end());
+	const wchar_t* file = widestr.c_str();
+	
+	WIN32_FIND_DATA FindFileData;
+	HANDLE hFind;
+	hFind = FindFirstFile(file, &FindFileData);
+
+	if (hFind != INVALID_HANDLE_VALUE) {
+		i++;
+		while ((x = FindNextFile(hFind, &FindFileData)) == TRUE)
+			i++;
+	}
+	return i;
 }

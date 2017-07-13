@@ -36,7 +36,8 @@ class Descriptor
 {
 public:
 	Descriptor();
-	virtual matrix<float, 0, 1> Descriptor::get_description(matrix<rgb_pixel> face);
+	virtual matrix<float, 0, 1> Descriptor::get_descriptor(matrix<rgb_pixel> face);
 private:
 	anet_type net;
+	string currentPath;
 };
