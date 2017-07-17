@@ -13,7 +13,7 @@ using namespace dlib;
 
 int main(int argc, char** argv)
 {
-	if (argc < 3)
+	if (argc < 2)
 	{
 		cout << "For sighthound method" << endl;
 		cout << "Usage : " << argv[0] << " [video file path] sighthound" << endl;
@@ -22,14 +22,14 @@ int main(int argc, char** argv)
 		return -1;
 	}
 	
-	
-	if (strcmp(argv[1], "train") == 0)
+	//Select Mode
+	if (!strcmp(argv[1], "train"))
 	{
 		TrainFace *train = new TrainFace(argv[2], argv[3], argv[4]);
 		train->train();
 		delete train;
 	}
-	else 
+	else if(!strcmp(argv[1], "rec"))
 	{
 		Sampler sampler(argv[2]);
 		FrontalFaceFilter filter;
@@ -57,13 +57,17 @@ int main(int argc, char** argv)
 				std::cout << pRecognizer->Recognize(frame) << std::endl;
 			}
 		}
-
 		pRecognizer->clustering();
 
 		delete pRecognizer;
-		cout << "end" << endl;
+		std::cout << "end" << endl;
 	}
+	else if(!strcmp(argv[1], "test"))
+	{
+		FaceRecognition* imgReg = new SvmRegcognition(string(argv[3]));
 
+		std::cout << imgReg->ImgRecognize(string(argv[2]));
+	}
     return 0;
 }
 

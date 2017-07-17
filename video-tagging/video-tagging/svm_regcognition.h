@@ -16,10 +16,13 @@ class SvmRegcognition: public FaceRecognition
 {
 public:
 	SvmRegcognition(string inst_id, string tap_id, string descriptor_path);
+	SvmRegcognition::SvmRegcognition(string descriptor_path);
 	virtual string Recognize(cv::Mat& mat);
 	virtual void clustering(); 
+	virtual string ImgRecognize(string img_file_path);
 	virtual ~SvmRegcognition();
 private:
+	virtual int checkFace(matrix<float, 0, 1> des, double *prob, int *count);
 	FaceCrop face;
 	Descriptor ex;
 	std::vector<string> listName;

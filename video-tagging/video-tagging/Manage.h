@@ -12,6 +12,6 @@ public:
 	static string change_out(string path, int n);
 	static void copyFile(string SRC, string DEST);
 	static bool isFileExist(const char *fileName);
-	static int number_of_files(string path);
+	static int number_of_files(const char* path);
 	static string get_dirName(string path);
 };

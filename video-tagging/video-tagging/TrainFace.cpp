@@ -3,6 +3,9 @@
 #include "Manage.h"
 #include <algorithm>
 #include <dlib/svm_threaded.h>
+#include "Manage.h"
+#include "FaceCrop.h"
+#include "Descriptor.h"
 using namespace std;
 using namespace dlib;
 
@@ -20,6 +23,23 @@ TrainFace::TrainFace(string assigned_name, string trained_path, string descripto
 
 	if (Manage::isFileExist(unknown_src_des_path.c_str()))
 		deserialize(unknown_src_des_path) >> unknown_des;
+	else
+	{
+		FaceCrop face;
+		Descriptor ex;
+		std::vector<string> all_img_file = Manage::get_all_file(trained_path.c_str());
+		matrix<float, 0, 1> des;
+		for (int i = 0; i < all_img_file.size(); i++)
+		{
+			std::vector<matrix<rgb_pixel>> faces = face.get_face(all_img_file[i]);
+			for (int j = 0; j < faces.size(); j++)
+			{
+				des = ex.get_descriptor(faces[j]);
+				unknown_des.push_back(des);
+			}			
+		}
+		serialize(unknown_src_des_path) << unknown_des;
+	}
 	
 	svm_path = descriptor_path + "/Svms";
 	faces_path = descriptor_path + "/Faces";

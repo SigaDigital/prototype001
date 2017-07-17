@@ -54,14 +54,64 @@ SvmRegcognition::SvmRegcognition(string inst_id, string tap_id, string descripto
 	}
 }
 
+SvmRegcognition::SvmRegcognition(string descriptor_path)
+{
+	string listName_file_path = descriptor_path + "/Name.dat";
+	deserialize(listName_file_path) >> listName;
+
+	svm_path = descriptor_path + "/Svms";
+	svmSet = Manage::get_all_file(svm_path.c_str());
+
+	//Load all test set
+	for (int i = 0; i < svmSet.size(); i++)
+	{
+		pfunct_type learned_pfunct;
+		deserialize(svmSet[i]) >> learned_pfunct;
+		all_pairs.push_back(learned_pfunct);
+	}
+}
+
 SvmRegcognition::~SvmRegcognition()
 {
 	serialize(preCluster_Path) << preCluster;
 }
 
-string SvmRegcognition::Recognize(cv::Mat& mat)
+string SvmRegcognition::ImgRecognize(string img_file_path)
 {
-	cout << "star recognize ..." << endl;
+	string output = "";
+	std::vector<matrix<rgb_pixel>> faces = face.get_face(img_file_path);
+	matrix<float, 0, 1> des;
+
+	//Processing each face
+	for (int i = 0; i < faces.size(); i++)
+	{
+		int index = 0;
+		double *prob = new double[listName.size()];
+		int *count = new int[listName.size()];
+		memset(prob, 0, sizeof(double) * listName.size());
+		memset(count, 0, sizeof(int) * listName.size());
+
+		des = ex.get_descriptor(faces[i]);
+		index = checkFace(des, prob, count);
+		
+		//Determine the confidence 
+		if (prob[index] < 0.8)	//Unknown
+		{
+			output.append("UNKNOWN");
+		}
+		else  //Known
+		{
+			output.append(listName[index]);
+		}
+
+		delete[] prob, count;
+	}
+
+	return output;
+}
+
+string SvmRegcognition::Recognize(cv::Mat& mat)
+ {
 	string output = "";
 	std::vector<matrix<rgb_pixel>> faces = face.get_face(mat);
 	matrix<float, 0, 1> des;
@@ -70,53 +120,13 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 	for (int i = 0; i < faces.size(); i++)
 	{		
 		int index = 0;
-		double max = 0;
-		const double invSize = 1.0 / (listName.size() - 1) ;
-
 		double *prob = new double[listName.size()];
 		int *count = new int[listName.size()];
 		memset(prob, 0, sizeof(double) * listName.size());
 		memset(count, 0, sizeof(int) * listName.size());
-		
+
 		des = ex.get_descriptor(faces[i]);
-
-		//Check all test set
-		for (int j = 0; j < svmSet.size(); j++)
-		{
-			pfunct_type learned_pfunct = all_pairs[j];
-
-			string data_name = Manage::get_name(svmSet[j]);
-			string nameA = data_name.substr(0, data_name.find_first_of("&"));
-			string nameB = data_name.substr(data_name.find_last_of("&") + 1);
-
-			double dis = learned_pfunct(des);
-			
-			int indexA = atoi(nameA.c_str());
-			int indexB = atoi(nameB.c_str());
-
-			if (dis > 0.5)
-				prob[indexA] += (dis - 0.5) * 2 * invSize;
-			else
-				prob[indexB] += (1 - dis - 0.5) * 2 * invSize;
-				
-			//Score counting
-			if(dis > 0.8)
-				count[indexA]++;
-			else if(dis < 0.2)
-				count[indexB]++;
-
-			//Check nearest face
-			if (max < prob[indexA])
-			{
-				index = indexA;
-				max = prob[indexA];
-			}
-			if (max < prob[indexB])
-			{
-				index = indexB;
-				max = prob[indexB];
-			}
-		}			
+		index = checkFace(des, prob, count);
 
 		//Determine the confidence
 		if (prob[index] < 0.8)	//Unknown
@@ -131,7 +141,7 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 			string dst_known_path = tap_id_path + "/" + listName[index];
 			array2d<rgb_pixel> img2d;
 			char number[10];
-			sprintf(number, "%04d", Manage::number_of_files(dst_known_path));
+			sprintf(number, "%04d", numberFace++);
 			string known_image_file_path = dst_known_path + "/" + listName[index] + "_" + string(number) + ".jpg";
 
 			mkdir(dst_known_path.c_str());
@@ -143,15 +153,63 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 		output.append(listName[index] + "---> confidence: " + cast_to_string(prob[index]) +
 						" Score:" + cast_to_string(count[index]) + "/" + cast_to_string(listName.size()-1));
 		numberFace++;
-		delete[] prob;
+		delete[] prob, count;
 	}
 	
 	return output;
 }
 
+int SvmRegcognition::checkFace(matrix<float, 0, 1> des, double *prob, int *count)
+{
+	double max = 0;
+	int index = 0;
+	const double invSize = 1.0 / (listName.size() - 1);
+
+	//Check all test set
+	for (int j = 0; j < svmSet.size(); j++)
+	{
+		pfunct_type learned_pfunct = all_pairs[j];
+
+		string data_name = Manage::get_name(svmSet[j]);
+		string nameA = data_name.substr(0, data_name.find_first_of("&"));
+		string nameB = data_name.substr(data_name.find_last_of("&") + 1);
+
+		double dis = learned_pfunct(des);
+
+		int indexA = atoi(nameA.c_str());
+		int indexB = atoi(nameB.c_str());
+
+		if (dis > 0.5)
+			prob[indexA] += (dis - 0.5) * 2 * invSize;
+		else
+			prob[indexB] += (1 - dis - 0.5) * 2 * invSize;
+
+		//Score counting
+		if (dis > 0.8)
+			count[indexA]++;
+		else if (dis < 0.2)
+			count[indexB]++;
+
+		//Check nearest face
+		if (max < prob[indexA])
+		{
+			index = indexA;
+			max = prob[indexA];
+		}
+		if (max < prob[indexB])
+		{
+			index = indexB;
+			max = prob[indexB];
+		}
+	}
+
+	return index;
+}
+
+
 void SvmRegcognition::clustering()
 {
-	const double treshold = 0.5;
+	const double treshold = 0.45;
 
 	for (size_t i = 0; i < preCluster.size(); ++i)
 	{

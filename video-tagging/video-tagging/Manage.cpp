@@ -112,21 +112,19 @@ void Manage::copyFile(string SRC, string DEST)
 	dest << src.rdbuf();
 }
 
-int Manage::number_of_files(string path)
+int Manage::number_of_files(const char* path)
 {
-	bool x = true;
-	int i = 0;
-	std::wstring widestr = std::wstring(path.begin(), path.end());
-	const wchar_t* file = widestr.c_str();
-	
-	WIN32_FIND_DATA FindFileData;
-	HANDLE hFind;
-	hFind = FindFirstFile(file, &FindFileData);
-
-	if (hFind != INVALID_HANDLE_VALUE) {
-		i++;
-		while ((x = FindNextFile(hFind, &FindFileData)) == TRUE)
-			i++;
+	int count = 0;
+	std::vector<wstring> files;
+	const size_t size = strlen(path) + 1;
+	wchar_t* path_source = new wchar_t[size];
+	mbstowcs(path_source, path, size);
+	if (Manage::ListFiles(path_source, L"*", files))
+	{
+		for (std::vector<wstring>::iterator it = files.begin();it != files.end(); ++it)
+		{
+			count++;
+		}
 	}
-	return i;
+	return count;
 }
