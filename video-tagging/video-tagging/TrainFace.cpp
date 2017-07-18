@@ -12,7 +12,7 @@ using namespace dlib;
 typedef matrix<double, 0, 1> sample_type;
 typedef radial_basis_kernel<sample_type> kernel_type;
 
-TrainFace::TrainFace(string assigned_name, string trained_path, string descriptor_path)
+TrainFace::TrainFace(string assigned_name, string trained_path, string descriptor_path, double gamma_in, double nu_in)
 {
 	app_data_path = string(getenv("APPDATA")) + "/VideoTagging";
 	data_path = app_data_path + "/Data";
@@ -48,6 +48,9 @@ TrainFace::TrainFace(string assigned_name, string trained_path, string descripto
 	if (Manage::isFileExist(listName_file_path.c_str()))
 		deserialize(listName_file_path) >> listName;
 	setName(assigned_name);
+
+	gammaValue = gamma_in;
+	nuValue = nu_in;
 }
 
 bool TrainFace::setName(string str)
@@ -85,18 +88,30 @@ void TrainFace::train()
 
 	
 	std::vector<sample_type> samples, tmp;
-	std::vector<double> labels;
-	deserialize(descriptor_path_file) >> samples;
+	std::vector<double> labels;	
 	std::vector<string> all_des = Manage::get_all_file(faces_path.c_str());
 	for (int i = 0; i < all_des.size(); i++)
 	{
+		deserialize(descriptor_path_file) >> samples;
+		labels.clear();
 		if (i != index_name)
 		{
-			for (int j = 0; j < samples.size(); j++)
-				labels.push_back(+1);
-			deserialize(all_des[i]) >> tmp;
-			for (int j = 0; j < tmp.size(); j++)
-				labels.push_back(-1);
+			if (index_name < i)
+			{
+				for (int j = 0; j < samples.size(); j++)
+					labels.push_back(+1);
+				deserialize(all_des[i]) >> tmp;
+				for (int j = 0; j < tmp.size(); j++)
+					labels.push_back(-1);
+			}
+			else
+			{
+				for (int j = 0; j < samples.size(); j++)
+					labels.push_back(-1);
+				deserialize(all_des[i]) >> tmp;
+				for (int j = 0; j < tmp.size(); j++)
+					labels.push_back(+1);
+			}
 			samples.insert(samples.end(), tmp.begin(), tmp.end());
 
 			vector_normalizer<sample_type> normalizer;
@@ -107,8 +122,30 @@ void TrainFace::train()
 
 			svm_nu_trainer<kernel_type> trainer;
 
-			trainer.set_kernel(kernel_type(0.00625));
-			trainer.set_nu(0.00625);
+			const double max_nu = maximum_nu(labels);
+			cout << "doing cross validation" << endl;
+			double m_gamma = 0, m_nu = 0, max = 0;
+			for (double gamma = 0.00001; gamma <= 1; gamma *= 5)
+			{
+				for (double nu = 0.00001; nu < max_nu; nu *= 5)
+				{
+					trainer.set_kernel(kernel_type(gamma));
+					trainer.set_nu(nu);
+
+					cout << "gamma: " << gamma << "    nu: " << nu;
+					matrix<double, 1, 2> value = cross_validate_trainer(trainer, samples, labels, 3);
+					cout << " accuracy: " << value(0) * value(1) << endl;
+					if (value(0) + value(1) >= max)
+					{
+						max = value(0) + value(1);
+						m_gamma = gamma;
+						m_nu = nu;
+					}
+				}
+			}
+
+			trainer.set_kernel(kernel_type(gammaValue));
+			trainer.set_nu(nuValue);
 
 			typedef probabilistic_decision_function<kernel_type> probabilistic_funct_type;
 			typedef normalized_function<probabilistic_funct_type> pfunct_type;
@@ -117,7 +154,10 @@ void TrainFace::train()
 			learned_pfunct.normalizer = normalizer;
 			learned_pfunct.function = train_probabilistic_decision_function(trainer, samples, labels, 3);
 						
-			serialize(svm_path + "/" + cast_to_string(index_name) + "&" + cast_to_string(i) + ".dat") << learned_pfunct;
+			if(index_name < i)
+				serialize(svm_path + "/" + cast_to_string(index_name) + "&" + cast_to_string(i) + ".dat") << learned_pfunct;
+			else
+				serialize(svm_path + "/" + cast_to_string(i) + "&" + cast_to_string(index_name) + ".dat") << learned_pfunct;
 		}
 	}
 }

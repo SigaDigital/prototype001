@@ -176,6 +176,7 @@
     <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zconf.h" />
     <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zlib.h" />
     <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zutil.h" />
+    <ClInclude Include="CleanData.h" />
     <ClInclude Include="Descriptor.h" />
     <ClInclude Include="face-recognition.h" />
     <ClInclude Include="FaceCrop.h" />
@@ -253,6 +254,7 @@
     <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\trees.c" />
     <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\uncompr.c" />
     <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\zutil.c" />
+    <ClCompile Include="CleanData.cpp" />
     <ClCompile Include="Descriptor.cpp" />
     <ClCompile Include="face-recognition.cpp" />
     <ClCompile Include="FaceCrop.cpp" />

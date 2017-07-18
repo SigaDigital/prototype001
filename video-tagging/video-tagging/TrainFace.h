@@ -6,11 +6,13 @@ using namespace dlib;
 class TrainFace
 {
 public:
-	TrainFace(string assigned_name, string trained_path, string descriptor_path);
+	TrainFace(string assigned_name, string trained_path, string descriptor_path, double gamma_in, double nu_in);
 	void train();
 	
 private:
 	int findNameIndex();
+	double gammaValue;
+	double nuValue;
 	bool setName(string str);
 	bool found;
 	string name_descriptor;

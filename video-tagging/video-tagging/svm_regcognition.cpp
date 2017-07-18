@@ -129,7 +129,7 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 		index = checkFace(des, prob, count);
 
 		//Determine the confidence
-		if (prob[index] < 0.8)	//Unknown
+		if (prob[index] < 0.7)	//Unknown
 		{
 			preCluster.push_back(des);
 

@@ -126,6 +126,9 @@
     <ClInclude Include="..\3rdparties\dlib\include\dlib\external\zlib\zutil.h">
       <Filter>Resource Files\zlib</Filter>
     </ClInclude>
+    <ClInclude Include="CleanData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -343,6 +346,9 @@
     </ClCompile>
     <ClCompile Include="..\3rdparties\dlib\include\dlib\external\zlib\zutil.c">
       <Filter>Resource Files\zlib</Filter>
+    </ClCompile>
+    <ClCompile Include="CleanData.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

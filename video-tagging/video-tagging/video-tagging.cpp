@@ -25,7 +25,10 @@ int main(int argc, char** argv)
 	//Select Mode
 	if (!strcmp(argv[1], "train"))
 	{
-		TrainFace *train = new TrainFace(argv[2], argv[3], argv[4]);
+		double gamma, nu;
+		sscanf(argv[5], "%lf", &gamma);
+		sscanf(argv[6], "%lf", &nu);
+		TrainFace *train = new TrainFace(argv[2], argv[3], argv[4], gamma, nu);
 		train->train();
 		delete train;
 	}
@@ -50,7 +53,7 @@ int main(int argc, char** argv)
 		{
 			//cout << "Next Frame" << endl;
 			//cv::imshow("frame", frame);
-			//cv::waitKey(100);
+			///cv::waitKey(100);
 			if (filter.Exec(frame))
 			{
 				cout << "frame execute ..." << endl;
