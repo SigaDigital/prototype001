@@ -19,8 +19,9 @@ public:
 	virtual std::string ImgRecognize(std::string img_file_path);
 	virtual std::string Recognize(cv::Mat& mat);	
 private:
+	virtual double GetProbClosed(int index, dlib::matrix<float, 0, 1> des);
 	virtual int CheckFace(dlib::matrix<float, 0, 1> des, double *prob, int *count);
-
+	
 	FaceCrop face;
 	Descriptor ex;
 	int number_of_face;

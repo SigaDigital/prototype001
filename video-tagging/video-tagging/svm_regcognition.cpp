@@ -97,16 +97,25 @@ string SvmRegcognition::ImgRecognize(string img_file_path)
 
 		des = ex.GetDescriptor(faces[i]);
 		index = CheckFace(des, prob, count);
-		
-		//Determine the confidence 
-		if (prob[index] < 0.8 || (double)count[index] / list_name.size() > 0.8)	//Unknown
+
+		//Determine the confidence
+		double prob_closed = GetProbClosed(index, des);
+		const double ACCEPTED_PROB = 0.8;
+		const double CONNECTED_ACCEPTED_PROB = 0.5;
+		//Known
+		if (
+			(double)count[index] / list_name.size() > ACCEPTED_PROB
+			&& prob[index] > ACCEPTED_PROB
+			&& prob_closed > CONNECTED_ACCEPTED_PROB
+			)
 		{
 			output.append("UNKNOWN");
 		}
-		else  //Known
+		else //Unknown
 		{
 			output.append(list_name[index]);
 		}
+
 
 		delete[] prob, count;
 	}
@@ -130,32 +139,17 @@ string SvmRegcognition::Recognize(cv::Mat& mat)
 		memset(count, 0, sizeof(int) * list_name.size());
 
 		des = ex.GetDescriptor(faces[i]);
-		index = CheckFace(des, prob, count);
-
-		//check distance
-		char number_index[10];
-		int closed_face = 0;
-		std::vector<dlib::matrix<float, 0, 1>> check_face;
-		sprintf(number_index, "%04d", index);
-		deserialize(face_path + "/" + string(number_index) + ".dat") >> check_face;
-
-		const double ACCEPTED_DISTANCE = 0.5;
-		for (int j = 0; j < check_face.size(); j++)
-		{
-			if (length(des - check_face[j]) < ACCEPTED_DISTANCE)
-			{
-				closed_face++;
-			}
-		}
+		index = CheckFace(des, prob, count);		
 		
 		//Determine the confidence
+		double prob_closed = GetProbClosed(index, des);
 		const double ACCEPTED_PROB = 0.8;
 		const double CONNECTED_ACCEPTED_PROB = 0.5;
 		//Known
 		if(
 			(double)count[index] / list_name.size() > ACCEPTED_PROB
 			&& prob[index] > ACCEPTED_PROB
-			&& (double)closed_face / check_face.size() > CONNECTED_ACCEPTED_PROB
+			&& prob_closed > CONNECTED_ACCEPTED_PROB
 			) 
 		{
 			string dst_known_path = tap_id_path + "/" + list_name[index];
@@ -312,4 +306,25 @@ void SvmRegcognition::Clustering()
 		serialize(unknow_des_files_path) << unknown_des;
 	}
 	serialize(pre_cluster_path) << pre_cluster;
+}
+
+double SvmRegcognition::GetProbClosed(int index, matrix<float, 0, 1> des)
+{
+	//check distance
+	char number_index[10];
+	int closed_face = 0;
+	std::vector<dlib::matrix<float, 0, 1>> check_face;
+	sprintf(number_index, "%04d", index);
+	deserialize(face_path + "/" + string(number_index) + ".dat") >> check_face;
+
+	const double ACCEPTED_DISTANCE = 0.5;
+	for (int j = 0; j < check_face.size(); j++)
+	{
+		if (length(des - check_face[j]) < ACCEPTED_DISTANCE)
+		{
+			closed_face++;
+		}
+	}
+
+	return (double)closed_face / check_face.size();
 }
