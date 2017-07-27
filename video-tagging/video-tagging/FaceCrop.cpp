@@ -5,22 +5,25 @@
 
 using namespace dlib;
 using namespace std;
+using namespace manage;
 
 FaceCrop::FaceCrop()
 {
-	currentPath = Manage::get_current();
+	current_path = get_current();
 	
-	deserialize(currentPath + "/Resource/shape_predictor_68_face_landmarks.dat") >> sp;
+	deserialize(current_path + "/Resource/shape_predictor_68_face_landmarks.dat") >> sp;
 	detector = get_frontal_face_detector();		
 }
 
-std::vector<matrix<rgb_pixel>>  FaceCrop::get_face(cv::Mat& frame)
+//Get all face images form matrix
+std::vector<matrix<rgb_pixel>>  FaceCrop::GetFace(cv::Mat& frame)
 {
 	std::vector<matrix<rgb_pixel>> faces;
-	imwrite(currentPath + "/tmp.jpg", frame);	
+	imwrite(current_path + "/tmp.jpg", frame);	
 	cv_image<rgb_pixel> tmp(frame);
 	matrix<rgb_pixel> cimg;
-	load_image(cimg, currentPath + "/tmp.jpg");
+	load_image(cimg, current_path + "/tmp.jpg");
+	pyramid_up(cimg);
 
 	for (auto face : detector(cimg))
 	{
@@ -34,7 +37,8 @@ std::vector<matrix<rgb_pixel>>  FaceCrop::get_face(cv::Mat& frame)
 	return faces;
 }
 
-std::vector<matrix<rgb_pixel>>  FaceCrop::get_face(string img_file_path)
+//Get all face images form image file path
+std::vector<matrix<rgb_pixel>>  FaceCrop::GetFace(string img_file_path)
 {
 	std::vector<matrix<rgb_pixel>> faces;
 	matrix<rgb_pixel> cimg;

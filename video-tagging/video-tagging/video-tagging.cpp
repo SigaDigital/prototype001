@@ -2,23 +2,29 @@
 //
 
 #include "stdafx.h"
-#include "sampler.h"
 #include "frontal-face-filter.h"
+#include "sampler.h"
 #include "sighthound-recognition.h"
 #include "svm_regcognition.h"
 #include "TrainFace.h"
 
-using namespace std;
 using namespace dlib;
+using namespace std;
 
 int main(int argc, char** argv)
 {
 	if (argc < 2)
 	{
-		cout << "For sighthound method" << endl;
-		cout << "Usage : " << argv[0] << " [video file path] sighthound" << endl;
-		cout << "For svm method" << endl;
-		cout << "Usage : " << argv[0] << " [video file path] svm [pre-trined directory path]" << endl;
+		cout << "Video Regcognition" << endl;
+		cout << "Sighthound method" << endl;
+		cout << "Usage : " << argv[0] << "rec [video file path] sighthound" << endl;
+		cout << "Svm method" << endl;
+		cout << "Usage : " << argv[0] << "rec [video file path] svm [descriptor directory path]" << endl;
+		cout << "--------------------------------" << endl;
+		cout << "\"Train new face\" usage : " << argv[0] << "  test [assigned name] [images directory path] " 
+			<< "[descriptor directory path] [gamma value] [nu value]" << endl;
+		cout << "\"Test image file\" usage : " << argv[0] << " [image file path] [descriptor director path]" << endl;
+		cout << "\"Compare distance between 2 image files\" usage : " << argv[0] << " [1st img file path] [2nd img file path] [descriptor directory path]" << endl;
 		return -1;
 	}
 	
@@ -29,7 +35,7 @@ int main(int argc, char** argv)
 		sscanf(argv[5], "%lf", &gamma);
 		sscanf(argv[6], "%lf", &nu);
 		TrainFace *train = new TrainFace(argv[2], argv[3], argv[4], gamma, nu);
-		train->train();
+		train->Train();
 		delete train;
 	}
 	else if(!strcmp(argv[1], "rec"))
@@ -53,14 +59,14 @@ int main(int argc, char** argv)
 		{
 			//cout << "Next Frame" << endl;
 			//cv::imshow("frame", frame);
-			///cv::waitKey(100);
+			//cv::waitKey(100);
 			if (filter.Exec(frame))
 			{
 				cout << "frame execute ..." << endl;
 				std::cout << pRecognizer->Recognize(frame) << std::endl;
 			}
 		}
-		pRecognizer->clustering();
+		pRecognizer->Clustering();
 
 		delete pRecognizer;
 		std::cout << "end" << endl;
@@ -70,6 +76,16 @@ int main(int argc, char** argv)
 		FaceRecognition* imgReg = new SvmRegcognition(string(argv[3]));
 
 		std::cout << imgReg->ImgRecognize(string(argv[2]));
+
+		delete imgReg;
+	}
+	else if (!strcmp(argv[1], "compare"))
+	{
+		FaceRecognition* imgReg = new SvmRegcognition(string(argv[4]));
+
+		cout << imgReg->CompareFace(string(argv[2]), string(argv[3])) << endl;
+
+		delete imgReg;
 	}
     return 0;
 }

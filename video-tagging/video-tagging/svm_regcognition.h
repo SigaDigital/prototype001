@@ -1,47 +1,46 @@
 #pragma once
 #include <dlib/clustering.h>
-#include "face-recognition.h"
-#include "FaceCrop.h"
 #include "Descriptor.h"
+#include "FaceCrop.h"
+#include "face-recognition.h"
 
-using namespace dlib;
-using namespace std;
+typedef dlib::matrix<float, 0, 1> sample_type;
+typedef dlib::radial_basis_kernel<sample_type> kernel_type;
+typedef dlib::probabilistic_decision_function<kernel_type> probabilistic_funct_type;
+typedef dlib::normalized_function<probabilistic_funct_type> pfunct_type;
 
-typedef matrix<float, 0, 1> sample_type;
-typedef radial_basis_kernel<sample_type> kernel_type;
-typedef probabilistic_decision_function<kernel_type> probabilistic_funct_type;
-typedef normalized_function<probabilistic_funct_type> pfunct_type;
-
-class SvmRegcognition: public FaceRecognition
+class SvmRegcognition : public FaceRecognition
 {
 public:
-	SvmRegcognition(string inst_id, string tap_id, string descriptor_path);
-	SvmRegcognition::SvmRegcognition(string descriptor_path);
-	virtual string Recognize(cv::Mat& mat);
-	virtual void clustering(); 
-	virtual string ImgRecognize(string img_file_path);
-	virtual ~SvmRegcognition();
+	SvmRegcognition(std::string descriptor_path);
+	SvmRegcognition(std::string inst_id, std::string tap_id, std::string descriptor_path);	
+	virtual void Clustering();
+	virtual std::string CompareFace(std::string firstPath, std::string secondPath);
+	virtual std::string ImgRecognize(std::string img_file_path);
+	virtual std::string Recognize(cv::Mat& mat);	
 private:
-	virtual int checkFace(matrix<float, 0, 1> des, double *prob, int *count);
+	virtual int CheckFace(dlib::matrix<float, 0, 1> des, double *prob, int *count);
+
 	FaceCrop face;
 	Descriptor ex;
-	std::vector<string> listName;
-	std::vector<string> svmSet;
+	int number_of_face;
+	int pre_cluster_size;
+	std::string app_data_path;
+	std::string data_path;
+	std::string face_path;
+	std::string inst_id_path;
+	std::string inst_path;
+	std::string pre_cluster_path;
+	std::string svm_path;
+	std::string tap_id_path;
+	std::string unknowns_path;
 	std::vector<pfunct_type> all_pairs;
-	std::vector<matrix<rgb_pixel>> faces;
-	std::vector<matrix<rgb_pixel>> unknown_faces;
-	std::vector<matrix<float, 0, 1>> unknown_descriptors;
-	std::vector<sample_pair> edges;
-	std::vector<matrix<float, 0, 1>> preCluster;
-	string app_data_path;	
-	string data_path;
-	string unknowns_path;
-	string inst_path;
-	string inst_id_path;
-	string tap_id_path;
-	string svm_path;
-	string preCluster_Path;
-	int numberFace;	
-	int preCluster_Size;
+	std::vector<dlib::sample_pair> edges;
+	std::vector<dlib::matrix<float, 0, 1>> pre_cluster;
+	std::vector<dlib::matrix<float, 0, 1>> unknown_descriptors;
+	std::vector<dlib::matrix<dlib::rgb_pixel>> faces;
+	std::vector<dlib::matrix<dlib::rgb_pixel>> unknown_faces;
+	std::vector<std::string> list_name;
+	std::vector<std::string> svm_set;	
 };
 

@@ -1,17 +1,14 @@
 #pragma once
-using namespace std;
-using namespace dlib;
+#include <vector>
 
-class Manage
+namespace manage
 {
-public:	
-	static bool ListFiles(wstring path, wstring mask, std::vector<wstring>& files);
-	static string get_current();
-	static std::vector<string> get_all_file(const char* path);
-	static string get_name(string path);
-	static string change_out(string path, int n);
-	static void copyFile(string SRC, string DEST);
-	static bool isFileExist(const char *fileName);
-	static int number_of_files(const char* path);
-	static string get_dirName(string path);
-};
+	bool list_files(std::wstring path, std::wstring mask, std::vector<std::wstring>& files);
+	bool is_file_exist(std::string fileName);
+	int number_of_files(std::string path);
+	void copy_file(std::string sourcePath, std::string destPath);
+	std::string get_current();
+	std::string get_parent_name(std::string path);
+	std::string get_name(std::string path);
+	std::vector<std::string> get_all_file(std::string path);
+}

@@ -1,12 +1,10 @@
 #pragma once
-
-using namespace std;
-using namespace dlib;
+#include <string>
 
 class CleanData
 {
 public:
 	CleanData() {}
-	virtual void clean(string path);
+	virtual void Clean(std::string path);
 private:
 };

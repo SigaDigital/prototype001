@@ -1,14 +1,16 @@
 #include "stdafx.h"
 #include "CleanData.h"
-#include "FaceCrop.h"
 #include "Descriptor.h"
+#include "FaceCrop.h"
 #include "Manage.h"
-using namespace std;
+
+
 using namespace dlib;
+using namespace manage;
+using namespace std;
 
-void CleanData::clean(string path)
+void CleanData::Clean(string path)
 {
-	std::vector<string> all_file_path = Manage::get_all_file(path.c_str());	
+	std::vector<string> all_file_path = get_all_file(path.c_str());
 }
-
 
