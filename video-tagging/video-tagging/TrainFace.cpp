@@ -22,6 +22,7 @@ TrainFace::TrainFace(string assigned_name, string trained_path, string descripto
 	unknown_src_path = trained_path;
 	unknown_src_des_path = unknown_src_path + "/Descriptor_" + get_parent_name(unknown_src_path) + ".dat";
 
+	//Check descriptor file. It'll create if it's not exist.
 	if (is_file_exist(unknown_src_des_path.c_str()))
 		deserialize(unknown_src_des_path) >> unknown_des;
 	else
@@ -48,6 +49,7 @@ TrainFace::TrainFace(string assigned_name, string trained_path, string descripto
 	listName_file_path = descriptor_path + "/Name.dat";
 	if (is_file_exist(listName_file_path.c_str()))
 		deserialize(listName_file_path) >> list_name;
+
 	SetName(assigned_name);
 
 	gamma_value = gamma_in;
@@ -87,7 +89,7 @@ void TrainFace::Train()
 	descriptor.insert(descriptor.end(), unknown_des.begin(), unknown_des.end());
 	serialize(descriptor_path_file) << descriptor;
 
-
+	//Create svm files
 	std::vector<sample_type> samples, tmp;
 	std::vector<double> labels;
 	std::vector<string> all_des = get_all_file(faces_path.c_str());
@@ -123,27 +125,29 @@ void TrainFace::Train()
 
 			svm_nu_trainer<kernel_type> trainer;
 
-			const double max_nu = maximum_nu(labels);
-			cout << "doing cross validation" << endl;
-			double m_gamma = 0, m_nu = 0, max = 0;
-			for (double gamma = 0.00001; gamma <= 1; gamma *= 5)
-			{
-				for (double nu = 0.00001; nu < max_nu; nu *= 5)
-				{
-					trainer.set_kernel(kernel_type(gamma));
-					trainer.set_nu(nu);
-
-					cout << "gamma: " << gamma << "    nu: " << nu;
-					matrix<double, 1, 2> value = cross_validate_trainer(trainer, samples, labels, 3);
-					cout << " accuracy: " << value(0) * value(1) << endl;
-					if (value(0) + value(1) >= max)
-					{
-						max = value(0) + value(1);
-						m_gamma = gamma;
-						m_nu = nu;
-					}
-				}
-			}
+			//Check cross valdation
+			
+			//const double max_nu = maximum_nu(labels);
+			//cout << "doing cross validation" << endl;
+			//double m_gamma = 0, m_nu = 0, max = 0;
+			//for (double gamma = 0.00001; gamma <= 1; gamma *= 5)
+			//{
+			//	for (double nu = 0.00001; nu < max_nu; nu *= 5)
+			//	{
+			//		trainer.set_kernel(kernel_type(gamma));
+			//		trainer.set_nu(nu);
+			//
+			//		cout << "gamma: " << gamma << "    nu: " << nu;
+			//		matrix<double, 1, 2> value = cross_validate_trainer(trainer, samples, labels, 3);
+			//		cout << " accuracy: " << value(0) * value(1) << endl;
+			//		if (value(0) + value(1) >= max)
+			//		{
+			//			max = value(0) + value(1);
+			//			m_gamma = gamma;
+			//			m_nu = nu;
+			//		}
+			//	}
+			//}
 
 			trainer.set_kernel(kernel_type(gamma_value));
 			trainer.set_nu(nu_value);
@@ -162,7 +166,7 @@ void TrainFace::Train()
 		}
 	}
 }
-
+ 
 int TrainFace::FindNameIndex()
 {
 	int index;
